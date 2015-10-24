@@ -28,19 +28,27 @@ for i in range(len(working_data_frame.index)):
     gender = working_data_frame['Gender'].map(gender_mapping).iloc[i]
     name = working_data_frame['First name'].iloc[i]
     contact = working_data_frame['Contact details'].iloc[i]
-    age = working_data_frame['How old are you?'].iloc[i]
+
+    try:
+        age = int(working_data_frame['How old are you?'].iloc[i])
+    except ValueError:
+        age = 30 #TODO fix
+
 
     try:
 
         languages_tokens = nltk.word_tokenize(working_data_frame['Languages'].iloc[i])
         stopset = nltk.corpus.stopwords.words('english') + list(string.punctuation)
         cleanup_language_words = [i for i in nltk.word_tokenize(working_data_frame['Languages'].iloc[i]) if i not in stopset]
+        cleanup_language_words = [word.lower() for word in cleanup_language_words]
+        print(cleanup_language_words)
 
     except TypeError:
         continue
 
     if isinstance(gender, float):
         continue
+
 
     if 'Germany' in string_that_should_contain_germany or 'germany' in string_that_should_contain_germany:
 
