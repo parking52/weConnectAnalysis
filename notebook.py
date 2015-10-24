@@ -3,9 +3,10 @@ __author__ = 'melchior'
 import pandas as pd
 import nltk
 from person import Person
+import string
 
 # nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+# nltk.download('stopwords')
 working_data_frame = pd.read_excel('survey_result.xlsx')
 
 # print(working_data_frame)
@@ -24,13 +25,12 @@ for i in range(len(working_data_frame.index)):
 
     string_that_should_contain_germany = working_data_frame['Where are you from?'].iloc[i]
     gender = working_data_frame['Gender'].map(gender_mapping).iloc[i]
-    try:
-        languages_tokens = nltk.word_tokenize(working_data_frame['Languages'].iloc[i])
-        words = [w.lower() for w in languages_tokens]
-        nltk.pos_tag(words)
 
-        print(words)
-        print(nltk.pos_tag(words))
+    try:
+
+        languages_tokens = nltk.word_tokenize(working_data_frame['Languages'].iloc[i])
+        stopset = nltk.corpus.stopwords.words('english') + list(string.punctuation)
+        cleanup_language_words = [i for i in nltk.word_tokenize(working_data_frame['Languages'].iloc[i]) if i not in stopset]
 
     except TypeError:
         continue
@@ -40,12 +40,12 @@ for i in range(len(working_data_frame.index)):
 
     if 'Germany' in string_that_should_contain_germany or 'germany' in string_that_should_contain_germany:
 
-        person_creation = Person(False, gender, [], [], [])
+        person_creation = Person(False, gender, [], [], cleanup_language_words)
         list_of_berlin_person.append(person_creation)
 
     else:
 
-        person_creation = Person(True, gender, [], [], [])
+        person_creation = Person(True, gender, [], [], cleanup_language_words)
         list_of_newcomer_person.append(person_creation)
 
 print('number of berlin people then newcomers')
