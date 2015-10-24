@@ -25,6 +25,8 @@ for i in range(len(working_data_frame.index)):
 
     string_that_should_contain_germany = working_data_frame['Where are you from?'].iloc[i]
     gender = working_data_frame['Gender'].map(gender_mapping).iloc[i]
+    name = working_data_frame['First name'].iloc[i]
+    contact = working_data_frame['Email address'].iloc[i]
 
     try:
 
@@ -40,17 +42,18 @@ for i in range(len(working_data_frame.index)):
 
     if 'Germany' in string_that_should_contain_germany or 'germany' in string_that_should_contain_germany:
 
-        person_creation = Person(False, gender, [], [], cleanup_language_words)
+        person_creation = Person(False, gender, [], [], cleanup_language_words, name, contact)
         list_of_berlin_person.append(person_creation)
 
     else:
 
-        person_creation = Person(True, gender, [], [], cleanup_language_words)
+        person_creation = Person(True, gender, [], [], cleanup_language_words, name, contact)
         list_of_newcomer_person.append(person_creation)
 
 print('number of berlin people then newcomers')
 print(len(list_of_berlin_person))
 print(len(list_of_newcomer_person))
+
 
 
 
